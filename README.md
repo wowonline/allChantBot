@@ -1,5 +1,6 @@
 # allChantBot
-telegram nickname - <b>@allChantBot</b>
+telegram nickname: 
+<p><b>@allChantBot</b></p>
 
 bot that tags all people in telegram group
 
