@@ -36,8 +36,6 @@ def botGetUpdates(chat_instance):
 
     while (True):
         sleep(1)
-        print(offset)
-        print(chat_instance.chat_pairs)
         query = f'https://api.telegram.org/bot{token}/getUpdates?offset={offset}'
         response = requests.get(query).json()
         if response['result'] != []:
