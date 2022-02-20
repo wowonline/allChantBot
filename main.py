@@ -54,58 +54,8 @@ def botSendMessage(chat_instance, chat_id):
     
 
 def main():
-    from config import token
-    import requests
-
     chat_instance = Chat()
     botGetUpdates(chat_instance)
-
-
-# def main():
-#     from config import token
-#     import requests
-
-#     chat_instance = Chat()
-
-#     # methodName = 'messages.getFullChat'
-#     methodName = 'getUpdates'
-#     # methodName = 'sendMessage'
-#     query = f'https://api.telegram.org/bot{token}/{methodName}?offset=165687453'
-#     response = requests.get(query).json()
-
-#     print(response)
-#     # for i in range(len(response['result'])):
-#     #     print(response['result'][i])
-#     #     print()
-#     #     print()
-
-# ##                                  PARAMETERS
-#     # -616644352
-#     chat_id = '-610894866'
-#     text = '@wowonline'
-#     params = f'chat_id={chat_id}&text={text}'
-#     query_buffed = f'{query}?{params}'
-#     resp = requests.post(query_buffed)
-
-#     if f'{resp.__repr__}' == '<bound method Response.__repr__ of <Response [400]>>':
-#         chat_id = resp.json()['parameters']['migrate_to_chat_id']
-#         params = f'chat_id={chat_id}&text={text}'
-#         query_buffed = f'{query}?{params}'
-#         resp = requests.post(query_buffed)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
