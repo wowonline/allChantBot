@@ -1,9 +1,16 @@
 # AllChantBot
 Telegram nickname: 
-  * <b>@allChantBot</b>
+  - **@callForEverybodyBot**
 
-# Важная особенность бота(обязательно к прочтению)
-Бот работает таким образом: парсит никнеймы юзеров из сообщенией и в ответ на `@all` в чате, он формирует сообщение с тэгами каждого. Проблема заключается в том, что бот тэгает <b>только</b> тех людей, сообщения которых были написаны после того, как бота добавили в чат. Так что прежде чем бот сможет тэгать каждого человека в чате, он должен увидеть сообщения каждого человека. Эта особенность возникла из-за отсутствия в telegram api метода получения никнеймов всех участников чата.
+## Usage
+### Important
+Before being able to tag a person, the bot must see their message after inviting the bot to the chat.
+### Steps
+1. Add bot to the chat
+2. Write `@all`
 
-# Usage
-В ответ на сообщение `@all`, бот тэгает каждого участника чата.
+## Roadmap
+- [x] deploy on Heroku
+- [ ] set up CI/CD
+- [ ] persistent storage
+- [ ] feature to combine people into groups and tag groups
