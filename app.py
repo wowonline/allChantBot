@@ -29,7 +29,6 @@ def botParseQueries(chat_instance, response) -> int:
 
 def botSendMessage(chat_instance, chat_id):
     from config import token
-
     msg = f'@{" @".join(chat_instance.chat_pairs[chat_id])}'
     query = f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={msg}'
     requests.post(query)
@@ -48,7 +47,6 @@ def validate():
 
 def main():
     from os import environ
-    
     app.run(debug=False, port=environ.get("PORT", 4999), host='0.0.0.0')
 
 if __name__ == '__main__':
