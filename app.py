@@ -56,10 +56,6 @@ def bot_parse_queries(response) -> int:
         if message == '@all':
             bot_send_chant(chat_id)
         if message == 'test':
-            # if chat_type == 'private':
-            #     bot_send_message(chat_id, f'Chat type: {chat_type}\nChat name: {chat_username}')
-            # else:
-            #     bot_send_message(chat_id, f'Chat type: {chat_type}\nChat name: {chat_title}')
             bot_send_message(chat_id, f'Chat type: {chat_type}\nChat name: {chat_instance.get_chat_name(chat_id)}')
         if message == 'print':
             bot_print_chat_pairs(chat_id)
@@ -71,7 +67,7 @@ def bot_print_chat_pairs(chat_to_print_id):
     chat_pairs = chat_instance.chat_pairs
     msg = ""    
     for chat_id, members_list in chat_pairs.items():
-        msg += f'\nChat ID: {chat_id}\n\t'
+        msg += f'\nChat ID: {chat_id} (Chat name: {chat_instance.get_chat_name(chat_id)})\n\t'
         for member_username in members_list:
             msg += f'{member_username} '
     bot_send_message(chat_to_print_id, msg)
