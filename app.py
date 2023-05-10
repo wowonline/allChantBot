@@ -64,9 +64,9 @@ def bot_print_chat_pairs(chat_to_print_id):
 
 def bot_send_chant(chat_id):
     msg = f'@{" @".join(chat_instance.chat_pairs[chat_id])}'
-    query = f'https://api.telegram.org/bot{chat_instance.token}/sendMessage?chat_id={chat_id}&text={msg}'
-    requests.post(query)
-    # bot_send_message(chat_id, msg)
+    # query = f'https://api.telegram.org/bot{chat_instance.token}/sendMessage?chat_id={chat_id}&text={msg}'
+    # requests.post(query)
+    bot_send_message(chat_id, msg)
     
     
 def bot_send_message(chat_id, msg_text):
