@@ -54,13 +54,11 @@ def bot_print_chat_pairs(chat_to_print_id):
     msg = ""    
     for chat_id, members_list in chat_pairs.items():
         msg += f'\nChat ID: {chat_id}'
-        
         meta = chat_instance.chat_metainfo[chat_id]
         chat_name = meta[0]
         for usr in chat_name[1]:
             msg += f'{usr} '
         msg += '\n\t'
-        
         for member_username in members_list:
             msg += f'{member_username} '
     bot_send_message(chat_to_print_id, msg)
