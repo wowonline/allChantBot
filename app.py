@@ -32,19 +32,20 @@ class Chat:
 chat_instance = Chat()
 
 
-def bot_parse_queries(response):
+def bot_parse_queries(response) -> int:
     try:
         chat_member_username = response['message']['from']['username']
         chat_id = response['message']['chat']['id']
         # active_usernames = response['message']['chat']['active_usernames']
-        chat_username = response['message']['chat']['username']
+        # chat_username = response['message']['chat']['username']
         message = response['message']['text']
         # chat_instance.manage_member(chat_id, chat_member_username, username, active_usernames)
         chat_instance.manage_member(chat_id, chat_member_username)
         if message == '@all':
             bot_send_chant(chat_id)
         if message == 'test':
-            bot_send_message(chat_id, f'chat_name {chat_username} test')
+            # bot_send_message(chat_id, f'chat_name {chat_username} test')
+            bot_send_message(chat_id, 'test')
         if message == 'print':
             bot_print_chat_pairs(chat_id)
     except KeyError:
@@ -55,12 +56,7 @@ def bot_print_chat_pairs(chat_to_print_id):
     chat_pairs = chat_instance.chat_pairs
     msg = ""    
     for chat_id, members_list in chat_pairs.items():
-        msg += f'\nChat ID: {chat_id}'
-        # meta = chat_instance.chat_metainfo[chat_id]
-        # chat_name = meta[0]
-        # for usr in chat_name[1]:
-        #     msg += f'{usr} '
-        # msg += '\n\t'
+        msg += f'\nChat ID: {chat_id}\n\t'
         for member_username in members_list:
             msg += f'{member_username} '
     bot_send_message(chat_to_print_id, msg)
@@ -68,15 +64,15 @@ def bot_print_chat_pairs(chat_to_print_id):
 
 def bot_send_chant(chat_id):
     msg = f'@{" @".join(chat_instance.chat_pairs[chat_id])}'
-    # query = f'https://api.telegram.org/bot{chat_instance.token}/sendMessage?chat_id={chat_id}&text={msg}'
-    # requests.post(query)
-    bot_send_message(chat_id, msg)
+    query = f'https://api.telegram.org/bot{chat_instance.token}/sendMessage?chat_id={chat_id}&text={msg}'
+    requests.post(query)
+    # bot_send_message(chat_id, msg)
     
     
 def bot_send_message(chat_id, msg_text):
     query = f'https://api.telegram.org/bot{chat_instance.token}/sendMessage?chat_id={chat_id}&text={msg_text}'
-    r = requests.post(query)
-    assert r.status_code == 200, "SOMETHING WRONG"
+    requests.post(query)
+    # assert r.status_code == 200, "SOMETHING WRONG"
 
 
 @app.route('/getting', methods=['POST'])
