@@ -16,13 +16,13 @@ def get_env_or_raise(env_name):
 class Chat:
     def __init__(self):
         self.chat_pairs = {}
-        # self.chat_metainfo = {}
+        self.chat_metainfo = {}
         self.token = get_env_or_raise('BOT_TOKEN')
         self.url = get_env_or_raise('URL')
     
-    # def manage_member(self, chat_id : int, chat_member_username : str, username : str):
-    def manage_member(self, chat_id : int, chat_member_username : str):
-        # self.chat_metainfo[chat_id] = username
+    def manage_member(self, chat_id : int, chat_member_username : str, type : str, chat_username : str, chat_title : str):
+    # def manage_member(self, chat_id : int, chat_member_username : str):
+        self.chat_metainfo[chat_id] = [type, chat_username, chat_title]
         if chat_id not in self.chat_pairs.keys():
             self.chat_pairs[chat_id] = [chat_member_username]
         elif chat_member_username not in self.chat_pairs[chat_id]:
