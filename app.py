@@ -49,8 +49,8 @@ def bot_print_chat_pairs():
     chat_pairs = chat_instance.chat_pairs
     msg = ""
     
-    for chat_id, members_list in chat_pairs:
-        msg += f'Chat ID: {chat_id}\n'
+    for chat_id, members_list in chat_pairs.items():
+        msg += f'\nChat ID: {chat_id}\n\t'
         for member_username in members_list:
             msg += f'{member_username} '
 
