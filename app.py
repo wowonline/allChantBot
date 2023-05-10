@@ -20,9 +20,9 @@ class Chat:
         self.token = get_env_or_raise('BOT_TOKEN')
         self.url = get_env_or_raise('URL')
     
-    def manage_member(self, chat_id : int, chat_member_username : str, type : str, chat_username : str, chat_title : str):
+    def manage_member(self, chat_id : int, chat_member_username : str, chat_type : str, chat_username : str, chat_title : str):
     # def manage_member(self, chat_id : int, chat_member_username : str):
-        self.chat_metainfo[chat_id] = [type, chat_username, chat_title]
+        self.chat_metainfo[chat_id] = [chat_type, chat_username, chat_title]
         if chat_id not in self.chat_pairs.keys():
             self.chat_pairs[chat_id] = [chat_member_username]
         elif chat_member_username not in self.chat_pairs[chat_id]:
@@ -46,7 +46,7 @@ def bot_parse_queries(response) -> int:
             chat_title = response['message']['chat']['title']
         message = response['message']['text']
         
-        chat_instance.manage_member(chat_id, chat_member_username)
+        chat_instance.manage_member(chat_id, chat_member_username, chat_type, chat_username, chat_title)
         if message == '@all':
             bot_send_chant(chat_id)
         if message == 'test':
