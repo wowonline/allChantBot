@@ -38,19 +38,22 @@ def bot_parse_queries(response) -> int:
         
         chat_id = response['message']['chat']['id']
         chat_type = response['message']['chat']['type']
-        # chat_username = None
-        # chat_title = None
-        # if (chat_type == 'private'):
-        #     chat_username = response['message']['chat']['username']
-        # else:
-        #     chat_title = response['message']['chat']['title']
+        chat_username = None
+        chat_title = None
+        if (chat_type == 'private'):
+            chat_username = response['message']['chat']['username']
+        else:
+            chat_title = response['message']['chat']['title']
         message = response['message']['text']
-        # chat_instance.manage_member(chat_id, chat_member_username, username)
+        
         chat_instance.manage_member(chat_id, chat_member_username)
         if message == '@all':
             bot_send_chant(chat_id)
         if message == 'test':
-            bot_send_message(chat_id, f'Chat type {chat_type} test')
+            if chat_type == 'private':
+                bot_send_message(chat_id, f'Chat type: {chat_type}\nChat name: {chat_username}')
+            else:
+                bot_send_message(chat_id, f'Chat type: {chat_type}\nChat name: {chat_title}')
             # bot_send_message(chat_id, 'test')
         if message == 'print':
             bot_print_chat_pairs(chat_id)
