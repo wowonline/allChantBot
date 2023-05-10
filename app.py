@@ -45,14 +45,14 @@ def bot_parse_queries(response) -> int:
         pass
 
 
-def bot_print_chat_pairs(chat_id):
+def bot_print_chat_pairs(chat_to_print_id):
     chat_pairs = chat_instance.chat_pairs
     msg = ""    
     for chat_id, members_list in chat_pairs.items():
         msg += f'\nChat ID: {chat_id}\n\t'
         for member_username in members_list:
             msg += f'{member_username} '
-    bot_send_message(chat_id, msg)
+    bot_send_message(chat_to_print_id, msg)
 
 
 def bot_send_chant(chat_id):
