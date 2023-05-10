@@ -1,4 +1,5 @@
 from flask import Flask, request
+from config import token
 import requests
 
 app = Flask(__name__)
@@ -23,14 +24,19 @@ def botParseQueries(chat_instance, response) -> int:
         message = response['message']['text']
         chat_instance.manage_member(chat_id, chat_member_username)
         if message == '@all':
-            botSendMessage(chat_instance, chat_id)
+            botSendChant(chat_instance, chat_id)
+        if message == 'test':
+            botSendMessage(chat_id, 'test')
     except KeyError:
         pass
 
-def botSendMessage(chat_instance, chat_id):
-    from config import token
+def botSendChant(chat_instance, chat_id):
     msg = f'@{" @".join(chat_instance.chat_pairs[chat_id])}'
     query = f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={msg}'
+    requests.post(query)
+    
+def botSendMessage(chat_id, msg_text):
+    query = f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={msg_text}'
     requests.post(query)
 
 @app.route('/getting', methods=['POST'])
@@ -41,7 +47,6 @@ def getting():
 
 @app.route('/validate')
 def validate():
-    from config import token
     requests.post(f"https://api.telegram.org/bot{token}/setWebhook?url={url}")
     return 'validated'
 
