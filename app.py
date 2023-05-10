@@ -20,7 +20,8 @@ class Chat:
         self.token = get_env_or_raise('BOT_TOKEN')
         self.url = get_env_or_raise('URL')
     
-    def manage_member(self, chat_id : int, chat_member_username : str, username : str, active_usernames : list):
+    # def manage_member(self, chat_id : int, chat_member_username : str, username : str, active_usernames : list):
+    def manage_member(self, chat_id : int, chat_member_username : str):
         # self.chat_metainfo[chat_id] = [username, active_usernames]
         if chat_id not in self.chat_pairs.keys():
             self.chat_pairs[chat_id] = [chat_member_username]
