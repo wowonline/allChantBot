@@ -38,7 +38,7 @@ def bot_parse_queries(response) -> int:
         if message == '@all':
             bot_send_chant(chat_id)
         if message == 'test':
-            bot_send_message('test')
+            bot_send_message(chat_id, 'test')
         if message == 'print':
             bot_print_chat_pairs()
     except KeyError:
@@ -61,7 +61,7 @@ def bot_send_chant(chat_id):
     requests.post(query)
     
     
-def bot_send_message(msg_text):
+def bot_send_message(chat_id, msg_text):
     query = f'https://api.telegram.org/bot{chat_instance.token}/sendMessage?chat_id={chat_id}&text={msg_text}'
     requests.post(query)
 
