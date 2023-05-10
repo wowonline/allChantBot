@@ -38,10 +38,11 @@ class Chat:
 chat_instance = Chat()
 
 
-def bot_parse_queries(response) -> int:
+def bot_parse_queries(response):
     try:
         chat_member_username = response['message']['from']['username']
         
+        message = response['message']['text']
         chat_id = response['message']['chat']['id']
         chat_type = response['message']['chat']['type']
         chat_username = None
@@ -50,7 +51,6 @@ def bot_parse_queries(response) -> int:
             chat_username = response['message']['chat']['username']
         else:
             chat_title = response['message']['chat']['title']
-        message = response['message']['text']
         
         chat_instance.manage_member(chat_id, chat_member_username, chat_type, chat_username, chat_title)
         if message == '@all':
@@ -75,15 +75,12 @@ def bot_print_chat_pairs(chat_to_print_id):
 
 def bot_send_chant(chat_id):
     msg = f'@{" @".join(chat_instance.chat_pairs[chat_id])}'
-    # query = f'https://api.telegram.org/bot{chat_instance.token}/sendMessage?chat_id={chat_id}&text={msg}'
-    # requests.post(query)
     bot_send_message(chat_id, msg)
     
     
 def bot_send_message(chat_id, msg_text):
     query = f'https://api.telegram.org/bot{chat_instance.token}/sendMessage?chat_id={chat_id}&text={msg_text}'
     requests.post(query)
-    # assert r.status_code == 200, "SOMETHING WRONG"
 
 
 @app.route('/getting', methods=['POST'])
