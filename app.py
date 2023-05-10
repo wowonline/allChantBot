@@ -21,12 +21,18 @@ class Chat:
         self.url = get_env_or_raise('URL')
     
     def manage_member(self, chat_id : int, chat_member_username : str, chat_type : str, chat_username : str, chat_title : str):
-    # def manage_member(self, chat_id : int, chat_member_username : str):
         self.chat_metainfo[chat_id] = [chat_type, chat_username, chat_title]
         if chat_id not in self.chat_pairs.keys():
             self.chat_pairs[chat_id] = [chat_member_username]
         elif chat_member_username not in self.chat_pairs[chat_id]:
             self.chat_pairs[chat_id].append(chat_member_username)
+
+    def get_chat_name(self, chat_id):
+        type, username, title = self.chat_metainfo[chat_id]
+        if type == 'private':
+            return username
+        else:
+            return title
 
 
 chat_instance = Chat()
@@ -50,11 +56,11 @@ def bot_parse_queries(response) -> int:
         if message == '@all':
             bot_send_chant(chat_id)
         if message == 'test':
-            if chat_type == 'private':
-                bot_send_message(chat_id, f'Chat type: {chat_type}\nChat name: {chat_username}')
-            else:
-                bot_send_message(chat_id, f'Chat type: {chat_type}\nChat name: {chat_title}')
-            # bot_send_message(chat_id, 'test')
+            # if chat_type == 'private':
+            #     bot_send_message(chat_id, f'Chat type: {chat_type}\nChat name: {chat_username}')
+            # else:
+            #     bot_send_message(chat_id, f'Chat type: {chat_type}\nChat name: {chat_title}')
+            bot_send_message(chat_id, f'Chat type: {chat_type}\nChat name: {chat_instance.get_chat_name(chat_id)}')
         if message == 'print':
             bot_print_chat_pairs(chat_id)
     except KeyError:
