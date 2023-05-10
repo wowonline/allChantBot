@@ -37,15 +37,14 @@ def bot_parse_queries(response):
         chat_member_username = response['message']['from']['username']
         chat_id = response['message']['chat']['id']
         # active_usernames = response['message']['chat']['active_usernames']
-        username = response['message']['chat']['username']
-        print(username)
+        chat_username = response['message']['chat']['username']
         message = response['message']['text']
         # chat_instance.manage_member(chat_id, chat_member_username, username, active_usernames)
         chat_instance.manage_member(chat_id, chat_member_username)
         if message == '@all':
             bot_send_chant(chat_id)
         if message == 'test':
-            bot_send_message(chat_id, 'test')
+            bot_send_message(chat_id, f'chat_name {chat_username} test')
         if message == 'print':
             bot_print_chat_pairs(chat_id)
     except KeyError:
