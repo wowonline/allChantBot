@@ -16,12 +16,12 @@ def get_env_or_raise(env_name):
 class Chat:
     def __init__(self):
         self.chat_pairs = {}
-        self.chat_metainfo = {}
+        # self.chat_metainfo = {}
         self.token = get_env_or_raise('BOT_TOKEN')
         self.url = get_env_or_raise('URL')
     
     def manage_member(self, chat_id : int, chat_member_username : str, username : str, active_usernames : list):
-        self.chat_metainfo[chat_id] = [username, active_usernames]
+        # self.chat_metainfo[chat_id] = [username, active_usernames]
         if chat_id not in self.chat_pairs.keys():
             self.chat_pairs[chat_id] = [chat_member_username]
         elif chat_member_username not in self.chat_pairs[chat_id]:
@@ -31,14 +31,15 @@ class Chat:
 chat_instance = Chat()
 
 
-def bot_parse_queries(response) -> int:
+def bot_parse_queries(response):
     try:
         chat_member_username = response['message']['from']['username']
         chat_id = response['message']['chat']['id']
-        active_usernames = response['message']['chat']['active_usernames']
-        username = response['message']['chat']['active_usernames']
+        # active_usernames = response['message']['chat']['active_usernames']
+        # username = response['message']['chat']['username']
         message = response['message']['text']
-        chat_instance.manage_member(chat_id, chat_member_username, username, active_usernames)
+        # chat_instance.manage_member(chat_id, chat_member_username, username, active_usernames)
+        chat_instance.manage_member(chat_id, chat_member_username)
         if message == '@all':
             bot_send_chant(chat_id)
         if message == 'test':
@@ -54,11 +55,11 @@ def bot_print_chat_pairs(chat_to_print_id):
     msg = ""    
     for chat_id, members_list in chat_pairs.items():
         msg += f'\nChat ID: {chat_id}'
-        meta = chat_instance.chat_metainfo[chat_id]
-        chat_name = meta[0]
-        for usr in chat_name[1]:
-            msg += f'{usr} '
-        msg += '\n\t'
+        # meta = chat_instance.chat_metainfo[chat_id]
+        # chat_name = meta[0]
+        # for usr in chat_name[1]:
+        #     msg += f'{usr} '
+        # msg += '\n\t'
         for member_username in members_list:
             msg += f'{member_username} '
     bot_send_message(chat_to_print_id, msg)
