@@ -40,19 +40,19 @@ def bot_parse_queries(response) -> int:
         if message == 'test':
             bot_send_message(chat_id, 'test')
         if message == 'print':
-            bot_print_chat_pairs()
+            bot_print_chat_pairs(chat_id)
     except KeyError:
         pass
 
 
-def bot_print_chat_pairs():
+def bot_print_chat_pairs(chat_id):
     chat_pairs = chat_instance.chat_pairs
-    msg = ""
-    
+    msg = ""    
     for chat_id, members_list in chat_pairs.items():
         msg += f'\nChat ID: {chat_id}\n\t'
         for member_username in members_list:
             msg += f'{member_username} '
+    bot_send_message(chat_id, msg)
 
 
 def bot_send_chant(chat_id):
