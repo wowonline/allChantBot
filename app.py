@@ -67,7 +67,7 @@ def bot_parse_queries(response):
         
         # DATABASE PART
         
-        if (db.check_if_chat_is_new(chat_id, chat_member_username)):
+        if (db.check_if_chat_is_new(chat_id)):
             db.add_chat_and_create_group_all(chat_id)
             db.group_add_member(chat_id, "all", chat_member_username, chat_member_id)
             
