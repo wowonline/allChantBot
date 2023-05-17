@@ -1,4 +1,7 @@
 # AllChantBot
+
+Bot that can tag groups of people in telegram chat. You can use @all to tag all people in chat or manage chat members to groups and tag them!
+
 Telegram nickname: 
   - **@callForEverybodyBot**
 
