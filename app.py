@@ -68,7 +68,8 @@ def bot_parse_queries(response):
         ##### DEBUG
         debug_chat_id = -943279534
         if (db.check_if_chat_is_new(chat_id)):
-            db.add_chat_and_create_group_all(debug_chat_id, 'group', 'тест ботика')
+            # db.add_chat_and_create_group_all(debug_chat_id, 'group', 'тест ботика')
+            db.add_chat_and_create_group_all(chat_id, chat_type, chat_title)
             bot_send_message(debug_chat_id, f"user {chat_member_username} was INITIALLY added to {chat_id}")
         return
     
