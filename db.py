@@ -190,6 +190,9 @@ def group_get_id_by_name(chat_id, gr_name):
 
 
 def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
+    if not check_if_group_exists(chat_id, gr_name):
+        return False
+    
     # creating user if adding to group 'all'
     if (gr_name == "all"):
         user_add_query = f"""
@@ -294,7 +297,7 @@ def main():
     
     # add_chat_and_create_group_all(100, "private", "ayabot")
     # add_chat_and_create_group_all(101, "public", "mama_talks")
-    # debug_print_chats()
+    debug_print_chats()
     # print(check_if_chat_is_new(100))
     
     # group_create(100, 'duraki')
@@ -307,7 +310,7 @@ def main():
     # group_add_member(100, "kachki", "danya", 8888)
     # debug_print_group_user()
     # group_del_member(100, "kachki", "danya")
-    # debug_print_group_user()
+    debug_print_group_user()
     # print(check_if_user_is_new(100, "danya"))
     # print(check_if_user_is_new(100, "jenya"))
     pass

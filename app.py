@@ -123,7 +123,7 @@ def bot_parse_queries(response):
                         username = words[2]
                         ret = db.group_add_member(chat_id, gr_name, username)
                         if ret == False:
-                            msg = f"User {username} is already in group \"{gr_name}\"!"
+                            msg = f"User {username} is already in group \"{gr_name}\" or group \"{gr_name}\" does't exists!"
                         else:
                             msg = f"User {username} was added to group \"{gr_name}\"!"
                         bot_send_message(chat_id, msg)
