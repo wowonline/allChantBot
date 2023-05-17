@@ -11,18 +11,20 @@ def get_env_or_raise(env_name):
 
 DATABASE_URL = get_env_or_raise('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-cur = conn.cursor()
 
 
 def drop_db():
+    cur = conn.cursor()
     cur.execute(
     """
     DROP TABLE IF EXISTS chat, groups, users, group_user;            
     """)
     cur.connection.commit()
+    cur.close()
 
 
 def initialize_db():
+    cur = conn.cursor()
     cur.execute(
     """
     CREATE TABLE chat(
@@ -76,67 +78,83 @@ def initialize_db():
     """)
     
     cur.connection.commit()
+    cur.close()
 
 
 def debug_print_chats() -> None:
+    cur = conn.cursor()
     query = """
     SELECT * FROM chat;
     """
     cur.execute(query)
     cur.connection.commit()
     print(cur.fetchall())
+    cur.close()
     
     
 def debug_print_groups_of_chat(chat_id) -> None:
+    cur = conn.cursor()
     query = f"""
     SELECT * FROM groups WHERE groups.tg_chat_id = {chat_id};
     """
     cur.execute(query)
     cur.connection.commit()
     print(cur.fetchall())
+    cur.close()
     
     
 def debug_print_group_user():
+    cur = conn.cursor()
     query = f"""
     SELECT * FROM group_user;
     """
     cur.execute(query)
     cur.connection.commit()
     print(cur.fetchall())
+    cur.close()
     
 
 def check_if_chat_is_new(chat_id) -> bool:
+    cur = conn.cursor()
     query = f"""
     SELECT EXISTS(SELECT 1 FROM chat WHERE chat.tg_chat_id = {chat_id})
     """
     cur.execute(query)
     cur.connection.commit()
-    return cur.fetchone()[0]
+    fetched = cur.fetchone()[0]
+    cur.close()
+    return fetched
 
 
 def add_chat_and_create_group_all(chat_id, chat_type, chat_name) -> None:
+    cur = conn.cursor()
     query = f"""
     INSERT INTO chat (tg_chat_id, tg_chat_type, tg_chat_name) VALUES
         ({chat_id}, '{chat_type}', '{chat_name}');
     """
     cur.execute(query)
     cur.connection.commit()
+    cur.close()
     group_create(chat_id, "all")
 
 
 # returns true if group exists
 def check_if_group_exists(chat_id, gr_name) -> bool:
+    cur = conn.cursor()
     query = f"""
     SELECT EXISTS(SELECT 1 FROM groups WHERE groups.tg_chat_id = {chat_id} AND
                                              groups.group_name = '{gr_name}')
     """
     cur.execute(query)
     cur.connection.commit()
-    return cur.fetchone()[0]
+    fetched = cur.fetchone()[0]
+    cur.close()
+    return fetched
 
 
 #returns string such as "gr_name1 gr_name2 gr_name3"
 def get_all_group_names(chat_id):
+    cur = conn.cursor()
     query = f"""
     SELECT groups.group_name FROM groups WHERE groups.tg_chat_id = {chat_id}
     """
@@ -145,6 +163,7 @@ def get_all_group_names(chat_id):
     ret = ""
     for tup in cur.fetchall():
         ret += tup[0] + " "
+    cur.close()
     
     return ret.rstrip()
 
@@ -152,18 +171,21 @@ def get_all_group_names(chat_id):
 def group_create(chat_id, gr_name) -> bool:
     if check_if_group_exists(chat_id, gr_name):
         return False
+    cur = conn.cursor()
     query = f"""
     INSERT INTO groups (group_name, tg_chat_id) VALUES
         ('{gr_name}', {chat_id})
     """
     cur.execute(query)
     cur.connection.commit()
+    cur.close()
     return True
 
 
 def group_delete(chat_id, gr_name) -> bool:
     if gr_name == "all" or not check_if_group_exists(chat_id, gr_name):
         return False
+    cur = conn.cursor()
     query = f"""
     DELETE FROM groups
     WHERE groups.tg_chat_id = {chat_id} AND 
@@ -171,11 +193,13 @@ def group_delete(chat_id, gr_name) -> bool:
     """
     cur.execute(query)
     cur.connection.commit()
+    cur.close()
     return True
 
 
 # need to check if group exists
 def group_get_id_by_name(chat_id, gr_name):
+    cur = conn.cursor()
     id_group_query = f"""
     SELECT groups.id_group FROM groups WHERE
         groups.group_name = '{gr_name}' AND
@@ -185,6 +209,7 @@ def group_get_id_by_name(chat_id, gr_name):
     cur.execute(id_group_query)
     cur.connection.commit()
     id_group = cur.fetchone()[0]
+    cur.close()
     #if cur.fetchone() none
     return id_group
 
@@ -195,12 +220,14 @@ def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
     
     # creating user if adding to group 'all'
     if (gr_name == "all"):
+        cur = conn.cursor()
         user_add_query = f"""
         INSERT INTO users (tg_user_id, tg_username) VALUES
             ({tg_user_id}, '{username}');
         """
         cur.execute(user_add_query)
         cur.connection.commit()
+        cur.close()
         
     if group_contains_member(chat_id, gr_name, username):
         return False
@@ -215,12 +242,14 @@ def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
     #debug print
     print(f"id user: {id_user}")
     
+    cur = conn.cursor()
     add_to_group_user_table_query = f"""
     INSERT INTO group_user (id_group, id_user) VALUES
         ({id_group}, {id_user});
     """
     cur.execute(add_to_group_user_table_query)
     cur.connection.commit()
+    cur.close()
     return True
 
 
@@ -230,6 +259,7 @@ def group_contains_member(chat_id, gr_name, username):
     id_group = group_get_id_by_name(chat_id, gr_name)
     id_user = user_get_id_by_username(chat_id, username)
     
+    cur = conn.cursor()
     query = f"""
     SELECT EXISTS(SELECT 1 FROM group_user WHERE
                     group_user.id_group = {id_group} AND
@@ -237,8 +267,9 @@ def group_contains_member(chat_id, gr_name, username):
     """
     cur.execute(query)
     cur.connection.commit()
-    
     fetched = cur.fetchone()[0]
+    cur.close()
+    
     print("DEBUG: ", fetched)
     return fetched
 
@@ -250,6 +281,7 @@ def group_del_member(chat_id, gr_name, username) -> bool:
     id_group = group_get_id_by_name(chat_id, gr_name)
     id_user = user_get_id_by_username(chat_id, username)
     
+    cur = conn.cursor()
     query = f"""
     DELETE FROM group_user
     WHERE group_user.id_group = {id_group} AND
@@ -257,6 +289,7 @@ def group_del_member(chat_id, gr_name, username) -> bool:
     """
     cur.execute(query)
     cur.connection.commit()
+    cur.close()
     return True
 
 
@@ -267,6 +300,7 @@ def group_get_members(chat_id, gr_name):
 
 
 def check_if_user_is_new(chat_id, username):
+    cur = conn.cursor()
     query = f"""
     SELECT EXISTS(SELECT 1 FROM users WHERE
                     users.tg_username='{username}')
@@ -274,10 +308,12 @@ def check_if_user_is_new(chat_id, username):
     cur.execute(query)
     cur.connection.commit()
     ans = cur.fetchone()[0]
+    cur.close()
     return not ans
 
 # need to check if user exists
 def user_get_id_by_username(chat_id, username):
+    cur = conn.cursor()
     id_user_query = f"""
     SELECT id_user FROM users WHERE
         users.tg_username = '{username}'
@@ -286,6 +322,7 @@ def user_get_id_by_username(chat_id, username):
     cur.execute(id_user_query)
     cur.connection.commit()
     id_user = cur.fetchone()[0]
+    cur.close()
     #if cur.fetchone() none
     return id_user
 
@@ -295,9 +332,9 @@ def main():
     # drop_db()
     # initialize_db()
     
-    # add_chat_and_create_group_all(100, "private", "ayabot")
+    # add_chat_and_create_group_all(-943279534, "group", "тест бота")
     # add_chat_and_create_group_all(101, "public", "mama_talks")
-    debug_print_chats()
+    # debug_print_chats()
     # print(check_if_chat_is_new(100))
     
     # group_create(100, 'duraki')
@@ -310,9 +347,16 @@ def main():
     # group_add_member(100, "kachki", "danya", 8888)
     # debug_print_group_user()
     # group_del_member(100, "kachki", "danya")
-    debug_print_group_user()
+    # debug_print_group_user()
     # print(check_if_user_is_new(100, "danya"))
     # print(check_if_user_is_new(100, "jenya"))
+    
+    
+    debug_print_chats()
+    # debug_print_group_user()
+    
+    
+    
     pass
     
     

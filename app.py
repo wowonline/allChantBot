@@ -66,6 +66,7 @@ def bot_parse_queries(response):
         
         debug_chat_id = -943279534
         db.add_chat_and_create_group_all(debug_chat_id, 'group', 'тест ботика')
+        bot_send_message(debug_chat_id, f"user {chat_member_username} was INITIALLY added to {chat_id}")
         return
         
         # DATABASE PART
