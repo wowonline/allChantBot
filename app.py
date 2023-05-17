@@ -184,8 +184,7 @@ def bot_parse_queries(response):
 
             
             elif words[0][0] == '@':
-                groups = db.get_all_group_names()
-                # members = group_get_members(chat_id)
+                groups = db.get_all_group_names(chat_id)
                 groups_set = set(groups.split())
                 
                 # check if first word without '@' is a group name
