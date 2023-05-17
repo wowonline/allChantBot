@@ -69,7 +69,7 @@ def bot_parse_queries(response):
         # DATABASE PART
         
         if (db.check_if_chat_is_new(chat_id)):
-            db.add_chat_and_create_group_all(chat_id)
+            db.add_chat_and_create_group_all(chat_id, chat_type, chat_title)
             db.group_add_member(chat_id, "all", chat_member_username, chat_member_id)
             bot_send_message(debug_chat_id, f"user {chat_member_username} was INITIALLY added to {chat_id}")
             
