@@ -283,6 +283,9 @@ def group_contains_member(chat_id, gr_name, username):
 
 
 def group_del_member(chat_id, gr_name, username) -> bool:
+    if gr_name == 'all':
+        return False
+    
     if not group_contains_member(chat_id, gr_name, username):
         return False
     

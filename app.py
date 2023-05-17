@@ -187,6 +187,7 @@ def bot_parse_queries(response):
                 try:
                     gr_name = words[1]
                     members = db.group_get_members(chat_id, gr_name)
+                    members = ", ".join(members.split()).rstrip()
                     msg = f"Group {gr_name} contains of {members}"
                     bot_send_message(chat_id, msg)
                 except IndexError:
