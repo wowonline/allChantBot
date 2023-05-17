@@ -123,7 +123,7 @@ def check_if_chat_is_new(chat_id) -> bool:
     cur.connection.commit()
     fetched = cur.fetchone()[0]
     cur.close()
-    return fetched
+    return not fetched
 
 
 def add_chat_and_create_group_all(chat_id, chat_type, chat_name) -> None:
