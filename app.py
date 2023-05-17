@@ -15,7 +15,17 @@ def get_env_or_raise(env_name):
 
 
 def get_group_help_string():
-    return """Use /group_help to get help"""
+    return """
+    Use 
+    /group_help - to get this message
+    /group_list - to list all groups
+    /group_create {group_name} - create group named {group_name}
+    /group_add_member {group_name} {username} - add {username} to {group_name} (user's message has to be seen by bot before you being able to add him to group)
+    /group_del_member {group_name} {username} - delete {username} from {group_name}
+    /group_del {group_name} - deletes group named {group_name}
+    /group_members {group_name} - returns list of {group_name} members
+    @{group_name} - tags every user in {group_name}
+    """
 
 
 
@@ -44,7 +54,6 @@ class Chat:
 chat_instance = Chat()
 
 
-
 def bot_parse_queries(response):
     try:
         chat_member_username = response['message']['from']['username']
@@ -64,42 +73,12 @@ def bot_parse_queries(response):
         # to remove chat_instance and make it BOT instance for
         # containing env variables
         
-        
-        ##### DEBUG
-        debug_chat_id = -943279534
-        # if (db.check_if_chat_is_new(chat_id)):
-        #     # db.add_chat_and_create_group_all(debug_chat_id, 'group', 'тест ботика')
-        #     db.add_chat_and_create_group_all(chat_id, chat_type, chat_title)
-        #     bot_send_message(debug_chat_id, f"user {chat_member_username} was INITIALLY added to {chat_id}")
-        # return
-    
-        ######
-        
-        # DATABASE PART
-        
         if (db.check_if_chat_is_new(chat_id)):
             db.add_chat_and_create_group_all(chat_id, chat_type, chat_title)
             db.group_add_member(chat_id, "all", chat_member_username, chat_member_id)
-            bot_send_message(debug_chat_id, f"user {chat_member_username} was INITIALLY added to {chat_id}")
             
         elif (db.check_if_user_is_new(chat_id, chat_member_username)):
             db.group_add_member(chat_id, "all", chat_member_username, chat_member_id)
-            bot_send_message(debug_chat_id, f"user {chat_member_username} was added to {chat_id}")
-        
-            
-        # if message == '@all':
-        #     bot_send_chant(chat_id)
-        #     return
-            
-        # elif message == 'test':
-        #     bot_send_message(chat_id, f'Chat type: {chat_type}\nChat ID: {chat_id}\nChat name: {chat_instance.get_chat_name(chat_id)}')
-        #     return
-            
-        # elif message == 'print':
-        #     bot_print_chat_pairs(chat_id)
-        #     return
-        
-        
         
         elif message == '/group_list':
             group_names = db.get_all_group_names(chat_id)
@@ -127,7 +106,6 @@ def bot_parse_queries(response):
                     err_msg = "You need to specify name of the group!"
                     bot_send_message(chat_id, err_msg)
                 
-                
             elif words[0] == '/group_add_member':
                 try:
                     gr_name = words[1]
@@ -145,7 +123,6 @@ def bot_parse_queries(response):
                 except IndexError:
                     err_msg = "You need to specify name of the group!"
                     bot_send_message(chat_id, err_msg)
-            
             
             elif words[0] == '/group_del_member':
                 try:
@@ -165,7 +142,6 @@ def bot_parse_queries(response):
                     err_msg = "You need to specify name of the group!"
                     bot_send_message(chat_id, err_msg)
             
-            
             elif words[0] == '/group_del':
                 try:
                     gr_name = words[1]
@@ -182,7 +158,6 @@ def bot_parse_queries(response):
                     err_msg = "You need to specify name of the group!"
                     bot_send_message(chat_id, err_msg)
 
-
             elif words[0] == '/group_members':
                 try:
                     gr_name = words[1]
@@ -193,7 +168,6 @@ def bot_parse_queries(response):
                 except IndexError:
                     err_msg = "You need to specify name of the group!"
                     bot_send_message(chat_id, err_msg)
-
             
             elif words[0][0] == '@':
                 groups = db.get_all_group_names(chat_id)
@@ -205,32 +179,10 @@ def bot_parse_queries(response):
                     users = db.group_get_members(chat_id, gr_name)
                     msg = f"@{' @'.join(users.split())}"
                     bot_send_message(chat_id, msg)
-                
-            
         except IndexError:
             pass
-        
-        
-        
-        
     except KeyError:
         pass
-
-
-# only for debug
-def bot_print_chat_pairs(chat_to_print_id):
-    chat_pairs = chat_instance.chat_pairs
-    msg = ""    
-    for chat_id, members_list in chat_pairs.items():
-        msg += f'\nChat ID: {chat_id} (Chat name: {chat_instance.get_chat_name(chat_id)})\n\t'
-        for member_username in members_list:
-            msg += f'{member_username} '
-    bot_send_message(chat_to_print_id, msg)
-
-
-def bot_send_chant(chat_id):
-    msg = f'@{" @".join(chat_instance.chat_pairs[chat_id])}'
-    bot_send_message(chat_id, msg)
     
     
 def bot_send_message(chat_id, msg):
