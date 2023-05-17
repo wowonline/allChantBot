@@ -127,6 +127,8 @@ def check_if_chat_is_new(chat_id) -> bool:
 
 
 def add_chat_and_create_group_all(chat_id, chat_type, chat_name) -> None:
+    if not check_if_chat_is_new(chat_id):
+        return
     cur = conn.cursor()
     query = f"""
     INSERT INTO chat (tg_chat_id, tg_chat_type, tg_chat_name) VALUES
@@ -329,8 +331,8 @@ def user_get_id_by_username(chat_id, username):
 
 
 def main():
-    # drop_db()
-    # initialize_db()
+    drop_db()
+    initialize_db()
     
     # add_chat_and_create_group_all(-943279534, "group", "тест бота")
     # add_chat_and_create_group_all(101, "public", "mama_talks")
