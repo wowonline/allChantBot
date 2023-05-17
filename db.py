@@ -140,8 +140,8 @@ def add_chat_and_create_group_all(chat_id, chat_type, chat_name) -> None:
     group_create(chat_id, "all")
 
 
-# returns true if group exists
 def check_if_group_exists(chat_id, gr_name) -> bool:
+    """returns true if group exists"""
     cur = conn.cursor()
     query = f"""
     SELECT EXISTS(SELECT 1 FROM groups WHERE groups.tg_chat_id = {chat_id} AND
@@ -164,7 +164,7 @@ def get_all_group_names(chat_id):
     cur.connection.commit()
     ret = ""
     for tup in cur.fetchall():
-        ret += tup[0] + " "
+        ret += tup[0] + "\n"
     cur.close()
     
     return ret.rstrip()
@@ -220,6 +220,9 @@ def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
     if not check_if_group_exists(chat_id, gr_name):
         return False
     
+    # if check_if_user_is_new(chat_id, username):
+    #     return False
+    
     # creating user if adding to group 'all'
     if (gr_name == "all"):
         cur = conn.cursor()
@@ -233,8 +236,6 @@ def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
         
     if group_contains_member(chat_id, gr_name, username):
         return False
-    
-    #check on if group not exist
     
     id_group = group_get_id_by_name(chat_id, gr_name)
     #debug print
@@ -258,6 +259,10 @@ def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
 def group_contains_member(chat_id, gr_name, username):
     if not check_if_group_exists(chat_id, gr_name):
         return False
+    
+    if check_if_user_is_new(chat_id, username):
+        return False
+    
     id_group = group_get_id_by_name(chat_id, gr_name)
     id_user = user_get_id_by_username(chat_id, username)
     
@@ -298,9 +303,27 @@ def group_del_member(chat_id, gr_name, username) -> bool:
 
 #returns string such as "usrname1 usrname2 usrname3"
 def group_get_members(chat_id, gr_name):
-    pass
+    cur = conn.cursor()
+    query = f"""
+    SELECT tg_username FROM users, group_user, groups WHERE
+        groups.tg_chat_id = {chat_id} AND
+        groups.group_name = '{gr_name}' AND
+        group_user.id_group = groups.id_group AND
+        users.id_user = group_user.id_user;
+    """
+    cur.execute(query)
+    cur.connection.commit()
+    ret = ""
+    for tup in cur.fetchall():
+        ret += tup[0] + " "
+    cur.close()
+    return ret.rstrip()
 
 
+
+# !!!!!!!!!!!!!!!!!!!
+# there will be problems when one user will be in
+# several chats where bot is added
 def check_if_user_is_new(chat_id, username):
     cur = conn.cursor()
     query = f"""
@@ -331,8 +354,8 @@ def user_get_id_by_username(chat_id, username):
 
 
 def main():
-    drop_db()
-    initialize_db()
+    # drop_db()
+    # initialize_db()
     
     # add_chat_and_create_group_all(-943279534, "group", "тест бота")
     # add_chat_and_create_group_all(101, "public", "mama_talks")
@@ -354,10 +377,17 @@ def main():
     # print(check_if_user_is_new(100, "jenya"))
     
     
+    # add_chat_and_create_group_all(100, "public", "botik")
+    
     debug_print_chats()
+
+    # group_add_member(100, "all", "vanya", 25)
+    # group_add_member(100, "all", "danec", 26)
+    # group_create(100, 'aya')
+    # group_add_member(1001, "grupa", "sasun", 27)
+    
     # debug_print_group_user()
-    
-    
+    # print(group_get_members(100, "all"))
     
     pass
     
