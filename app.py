@@ -182,6 +182,17 @@ def bot_parse_queries(response):
                     err_msg = "You need to specify name of the group!"
                     bot_send_message(chat_id, err_msg)
 
+
+            elif words[0] == '/group_members':
+                try:
+                    gr_name = words[1]
+                    members = db.group_get_members()
+                    msg = f"Group {gr_name} contains of {members}"
+                    bot_send_message(chat_id, msg)
+                except IndexError:
+                    err_msg = "You need to specify name of the group!"
+                    bot_send_message(chat_id, err_msg)
+
             
             elif words[0][0] == '@':
                 groups = db.get_all_group_names(chat_id)
