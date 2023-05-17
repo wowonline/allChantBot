@@ -11,7 +11,7 @@ Before being able to tag a person, the bot must see their message after inviting
 ### Steps
 1. Add bot to the chat
 2. Use one of following commands: \
-    /group_help - to get this message (or /gh) \
+    **/group_help** - to get this message (or /gh) \
     /group_list - to list all groups \
     /group_create {group_name} - create group named {group_name} \
     /group_add_member {group_name} {username} - add {username} to {group_name} (user's message has to be seen by bot before you being able to add him to group) \
