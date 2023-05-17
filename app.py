@@ -64,6 +64,7 @@ def bot_parse_queries(response):
         # to remove chat_instance and make it BOT instance for
         # containing env variables
         
+        bot_send_message(chat_id, f"chat id is: {chat_id}")
         
         # DATABASE PART
         
