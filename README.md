@@ -7,7 +7,7 @@ Telegram nickname:
 Before being able to tag a person, the bot must see their message after inviting the bot to the chat.
 ### Steps
 1. Add bot to the chat
-2. Use one of following commands:
+2. Use one of following commands: \
     /group_help - to get this message (or /gh) \
     /group_list - to list all groups \
     /group_create {group_name} - create group named {group_name} \
