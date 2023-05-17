@@ -65,6 +65,8 @@ def bot_parse_queries(response):
         # containing env variables
         
         debug_chat_id = -943279534
+        db.add_chat_and_create_group_all(debug_chat_id, 'group', 'тест ботика')
+        return
         
         # DATABASE PART
         
