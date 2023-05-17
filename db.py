@@ -220,9 +220,6 @@ def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
     if not check_if_group_exists(chat_id, gr_name):
         return False
     
-    # if check_if_user_is_new(chat_id, username):
-    #     return False
-    
     # creating user if adding to group 'all'
     if (gr_name == "all"):
         cur = conn.cursor()
@@ -233,6 +230,10 @@ def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
         cur.execute(user_add_query)
         cur.connection.commit()
         cur.close()
+        
+    if check_if_user_is_new(chat_id, username):
+        return False
+    
         
     if group_contains_member(chat_id, gr_name, username):
         return False
@@ -354,8 +355,8 @@ def user_get_id_by_username(chat_id, username):
 
 
 def main():
-    # drop_db()
-    # initialize_db()
+    drop_db()
+    initialize_db()
     
     # add_chat_and_create_group_all(-943279534, "group", "тест бота")
     # add_chat_and_create_group_all(101, "public", "mama_talks")
