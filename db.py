@@ -310,7 +310,7 @@ def main():
     # debug_print_group_user()
     # print(check_if_user_is_new(100, "danya"))
     # print(check_if_user_is_new(100, "jenya"))
-    
+    pass
     
     
 if __name__ == "__main__":
