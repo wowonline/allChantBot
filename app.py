@@ -17,7 +17,7 @@ def get_env_or_raise(env_name):
 def get_group_help_string():
     return """
     Use 
-    /group_help - to get this message
+    /group_help - to get this message (or /gh)
     /group_list - to list all groups
     /group_create {group_name} - create group named {group_name}
     /group_add_member {group_name} {username} - add {username} to {group_name} (user's message has to be seen by bot before you being able to add him to group)
@@ -86,7 +86,7 @@ def bot_parse_queries(response):
             bot_send_message(chat_id, msg)
             return
 
-        elif message == '/group_help':
+        elif message == '/group_help' or message == '/gh':
             msg = get_group_help_string()
             bot_send_message(chat_id, msg)
             return
