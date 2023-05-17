@@ -87,17 +87,17 @@ def bot_parse_queries(response):
             bot_send_message(debug_chat_id, f"user {chat_member_username} was added to {chat_id}")
         
             
-        if message == '@all':
-            bot_send_chant(chat_id)
-            return
+        # if message == '@all':
+        #     bot_send_chant(chat_id)
+        #     return
             
-        elif message == 'test':
-            bot_send_message(chat_id, f'Chat type: {chat_type}\nChat ID: {chat_id}\nChat name: {chat_instance.get_chat_name(chat_id)}')
-            return
+        # elif message == 'test':
+        #     bot_send_message(chat_id, f'Chat type: {chat_type}\nChat ID: {chat_id}\nChat name: {chat_instance.get_chat_name(chat_id)}')
+        #     return
             
-        elif message == 'print':
-            bot_print_chat_pairs(chat_id)
-            return
+        # elif message == 'print':
+        #     bot_print_chat_pairs(chat_id)
+        #     return
         
         
         
@@ -133,7 +133,7 @@ def bot_parse_queries(response):
                     gr_name = words[1]
                     try:
                         username = words[2]
-                        ret = db.group_add_member(chat_id, gr_name, username)
+                        ret = db.group_add_member(chat_id, gr_name, username, chat_member_id)
                         if ret == False:
                             msg = f"User {username} is already in group \"{gr_name}\" or group \"{gr_name}\" does't exists!"
                         else:
@@ -177,6 +177,17 @@ def bot_parse_queries(response):
                             msg = f"Group \"{gr_name}\" doesn't exists!"
                     else:
                         msg = f"Group {gr_name} was deleted!"
+                    bot_send_message(chat_id, msg)
+                except IndexError:
+                    err_msg = "You need to specify name of the group!"
+                    bot_send_message(chat_id, err_msg)
+
+
+            elif words[0] == '/group_members':
+                try:
+                    gr_name = words[1]
+                    members = db.group_get_members()
+                    msg = f"Group {gr_name} contains of {members}"
                     bot_send_message(chat_id, msg)
                 except IndexError:
                     err_msg = "You need to specify name of the group!"
