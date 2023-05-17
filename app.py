@@ -93,7 +93,7 @@ def bot_parse_queries(response):
         
         
         elif message == '/group_list':
-            group_names = db.get_all_group_names()
+            group_names = db.get_all_group_names(chat_id)
             msg = f"Groups:\n{group_names}"
             bot_send_message(chat_id, msg)
             return
