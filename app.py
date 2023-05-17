@@ -64,16 +64,18 @@ def bot_parse_queries(response):
         # to remove chat_instance and make it BOT instance for
         # containing env variables
         
-        bot_send_message(chat_id, f"chat id is: {chat_id}")
+        debug_chat_id = -943279534
         
         # DATABASE PART
         
         if (db.check_if_chat_is_new(chat_id)):
             db.add_chat_and_create_group_all(chat_id)
             db.group_add_member(chat_id, "all", chat_member_username, chat_member_id)
+            bot_send_message(debug_chat_id, f"user {chat_member_username} was added to {chat_id}")
             
         elif (db.check_if_user_is_new(chat_id, chat_member_username)):
             db.group_add_member(chat_id, "all", chat_member_username, chat_member_id)
+            bot_send_message(debug_chat_id, f"user {chat_member_username} was added to {chat_id}")
         
             
         if message == '@all':
