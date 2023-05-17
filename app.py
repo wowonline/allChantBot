@@ -186,7 +186,7 @@ def bot_parse_queries(response):
             elif words[0] == '/group_members':
                 try:
                     gr_name = words[1]
-                    members = db.group_get_members()
+                    members = db.group_get_members(chat_id, gr_name)
                     msg = f"Group {gr_name} contains of {members}"
                     bot_send_message(chat_id, msg)
                 except IndexError:
