@@ -54,6 +54,12 @@ class Chat:
 chat_instance = Chat()
 
 
+def replace_par_with_double_par(string):
+    if string == None:
+        return None
+    return string.replace('\'', '\'\'')
+    
+
 def bot_parse_queries(response):
     try:
         chat_member_username = response['message']['from']['username']
@@ -64,10 +70,18 @@ def bot_parse_queries(response):
         chat_type = response['message']['chat']['type']
         chat_username = None
         chat_title = None
+        
+        
+        
         if (chat_type == 'private'):
             chat_username = response['message']['chat']['username']
         else:
             chat_title = response['message']['chat']['title']
+        
+        
+        chat_member_username = replace_par_with_double_par(chat_member_username)
+        chat_username = replace_par_with_double_par(chat_username)
+        chat_title = replace_par_with_double_par(chat_title)
         
         chat_instance.manage_member(chat_id, chat_member_username, chat_type, chat_username, chat_title)
         # to remove chat_instance and make it BOT instance for

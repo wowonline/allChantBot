@@ -304,7 +304,6 @@ def group_del_member(chat_id, gr_name, username) -> bool:
     return True
 
 
-
 #returns string such as "usrname1 usrname2 usrname3"
 def group_get_members(chat_id, gr_name):
     cur = conn.cursor()
@@ -358,40 +357,11 @@ def user_get_id_by_username(chat_id, username):
 
 
 def main():
-    drop_db()
-    initialize_db()
-    
-    # add_chat_and_create_group_all(-943279534, "group", "тест бота")
-    # add_chat_and_create_group_all(101, "public", "mama_talks")
-    # debug_print_chats()
-    # print(check_if_chat_is_new(100))
-    
-    # group_create(100, 'duraki')
-    # debug_print_groups_of_chat(100)
-    # group_delete(100, 'all')
-    # debug_print_groups_of_chat(100)
-    
-    # print(get_all_group_names(100))
-    # # group_add_member(100, "all", "vanya", 25)
-    # group_add_member(100, "kachki", "danya", 8888)
-    # debug_print_group_user()
-    # group_del_member(100, "kachki", "danya")
-    # debug_print_group_user()
-    # print(check_if_user_is_new(100, "danya"))
-    # print(check_if_user_is_new(100, "jenya"))
-    
-    
-    # add_chat_and_create_group_all(100, "public", "botik")
+    # drop_db()
+    # initialize_db()
     
     debug_print_chats()
-
-    # group_add_member(100, "all", "vanya", 25)
-    # group_add_member(100, "all", "danec", 26)
-    # group_create(100, 'aya')
-    # group_add_member(1001, "grupa", "sasun", 27)
-    
-    # debug_print_group_user()
-    # print(group_get_members(100, "all"))
+    debug_print_group_user()
     
     pass
     
