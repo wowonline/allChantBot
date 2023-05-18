@@ -107,6 +107,7 @@ def bot_parse_queries(response):
             if words[0] == '/group_create':
                 try:
                     gr_name = words[1]
+                    gr_name = delete_paragraph(gr_name)
                     ret = db.group_create(chat_id, gr_name)
                     if ret == False:
                         msg = f"Group \"{gr_name}\" is already exists!"
@@ -120,8 +121,10 @@ def bot_parse_queries(response):
             elif words[0] == '/group_add_member':
                 try:
                     gr_name = words[1]
+                    gr_name = delete_paragraph(gr_name)
                     try:
                         username = words[2]
+                        username = delete_paragraph(username)
                         ret = db.group_add_member(chat_id, gr_name, username, chat_member_id)
                         if ret == False:
                             msg = f"User {username} is already in group \"{gr_name}\" or group \"{gr_name}\" does't exists!"
@@ -138,8 +141,10 @@ def bot_parse_queries(response):
             elif words[0] == '/group_del_member':
                 try:
                     gr_name = words[1]
+                    gr_name = delete_paragraph(gr_name)
                     try:
                         username = words[2]
+                        username = delete_paragraph(username)
                         ret = db.group_del_member(chat_id, gr_name, username)
                         if ret == False:
                             msg = f"User {username} doesn't belongs to group \"{gr_name}\"!"
@@ -156,6 +161,7 @@ def bot_parse_queries(response):
             elif words[0] == '/group_del':
                 try:
                     gr_name = words[1]
+                    gr_name = delete_paragraph(gr_name)
                     ret = db.group_delete(chat_id, gr_name)
                     if ret == False:
                         if gr_name == "all":
@@ -172,6 +178,7 @@ def bot_parse_queries(response):
             elif words[0] == '/group_members':
                 try:
                     gr_name = words[1]
+                    gr_name = delete_paragraph(gr_name)
                     members = db.group_get_members(chat_id, gr_name)
                     members = ", ".join(members.split()).rstrip()
                     msg = f"Group {gr_name} contains of {members}"
