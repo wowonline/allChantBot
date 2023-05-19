@@ -199,8 +199,8 @@ def bot_parse_queries(response):
                         msg = "You have to specify name of the group!"
             except IndexError:
                 pass
-            if msg != None:
-                bot_send_message(chat_id, msg)
+        if msg != None:
+            bot_send_message(chat_id, msg)
     except KeyError:
         pass
         
