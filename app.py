@@ -129,7 +129,7 @@ def bot_parse_queries(response):
                     #         msg = "You can't tag an empty group!"
                     #     elif ret == 0:
                     #         msg = f"@{' @'.join(users.split())}"
-                    msg = commands.group_tag(chat_id, gr_name, words)
+                    msg = commands.group_tag(chat_id, words)
 
                 elif words[0] in group_commands:
                     command = words[0]
