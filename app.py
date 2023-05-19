@@ -65,9 +65,6 @@ def bot_parse_queries(response):
         chat_member_username = delete_paragraph(chat_member_username)
         chat_title = delete_paragraph(chat_title)
         message = delete_paragraph(message)
- 
-        if 'forward_from_chat' in response['message']:
-            bot_send_message(-943279534, "message was forwarded!")
     
         msg = None
         if (db.check_if_chat_is_new(chat_id)):
