@@ -4,41 +4,17 @@ import db
 import commands
 
 
-app = Flask(__name__)
-
-
 def get_env_or_raise(env_name):
     env_value = os.getenv(env_name)
     error_message = f'{env_name} environment variable must be set.'
     assert env_value, error_message
     return env_value
 
+
+app = Flask(__name__)
+DEFAULT_PORT = 4999
 BOT_TOKEN = get_env_or_raise('BOT_TOKEN')
 URL = get_env_or_raise('URL')
-
-# class Chat:
-#     def __init__(self):
-#         self.chat_pairs = {}
-#         self.chat_metainfo = {}
-#         self.token = get_env_or_raise('BOT_TOKEN')
-#         self.url = get_env_or_raise('URL')
-    
-#     def manage_member(self, chat_id : int, chat_member_username : str, chat_type : str, chat_username : str, chat_title : str):
-#         self.chat_metainfo[chat_id] = [chat_type, chat_username, chat_title]
-#         if chat_id not in self.chat_pairs.keys():
-#             self.chat_pairs[chat_id] = [chat_member_username]
-#         elif chat_member_username not in self.chat_pairs[chat_id]:
-#             self.chat_pairs[chat_id].append(chat_member_username)
-
-#     def get_chat_name(self, chat_id):
-#         type, username, title = self.chat_metainfo[chat_id]
-#         if type == 'private':
-#             return username
-#         else:
-#             return title
-
-
-# chat_instance = Chat()
 
 
 def delete_paragraph(string):
@@ -66,24 +42,12 @@ def bot_parse_queries(response):
         message = response['message']['text']
         chat_id = response['message']['chat']['id']
         chat_type = response['message']['chat']['type']
-        chat_username = None
-        chat_title = None
-        
-        if (chat_type == 'private'):
-            chat_username = response['message']['chat']['username']
-        else:
-            chat_title = response['message']['chat']['title']
+        chat_title = response['message']['chat']['title']
         
         chat_member_username = delete_paragraph(chat_member_username)
-        chat_username = delete_paragraph(chat_username)
         chat_title = delete_paragraph(chat_title)
         message = delete_paragraph(message)
-        
-        
-        # chat_instance.manage_member(chat_id, chat_member_username, chat_type, chat_username, chat_title)
-        # to remove chat_instance and make it BOT instance for
-        # containing env variables
-        
+ 
         msg = None
         if (db.check_if_chat_is_new(chat_id)):
             db.add_chat_and_create_group_all(chat_id, chat_type, chat_title)
@@ -172,7 +136,7 @@ def validate():
 
 def main():
     from os import environ
-    app.run(debug=False, port=environ.get("PORT", 4999), host='0.0.0.0')
+    app.run(debug=False, port=environ.get("PORT", DEFAULT_PORT), host='0.0.0.0')
 
 
 if __name__ == '__main__':
