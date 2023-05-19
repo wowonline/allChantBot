@@ -18,7 +18,7 @@ Before being able to tag a person, the bot must see their message after inviting
     **/group_del_member {group_name} {username}** - delete {username} from {group_name} \
     **/group_del {group_name}** - deletes group named {group_name} \
     **/group_members {group_name}** - returns list of {group_name} members \
-    **@{group_name}** - tags every user in {group_name} \
+    **@{group_name}** - tags every user in {group_name}
 
 ## Roadmap
 - [x] deploy on Heroku
