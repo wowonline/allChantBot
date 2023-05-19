@@ -1,7 +1,7 @@
 import db
 
 
-def group_tag(chat_id, gr_name, words):
+def group_tag(chat_id, words):
     groups = db.get_all_group_names(chat_id)
     groups_set = set(groups.split())
     msg = None
