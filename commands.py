@@ -2,6 +2,9 @@ import db
 
 
 def group_help_string():
+    """
+    Returns bot help string.
+    """
     return """
         Use 
         /group_help - to get this message (or /gh)
@@ -16,12 +19,18 @@ def group_help_string():
 
 
 def group_list(chat_id):
+    """
+    Returns string containing all the group names.
+    """
     group_names = db.get_all_group_names(chat_id)
     msg = f"Groups:\n{group_names}"
     return msg
 
 
 def group_tag(chat_id, words):
+    """
+    Returns string with all users tagged for {gr_name} group.
+    """
     groups = db.get_all_group_names(chat_id)
     groups_set = set(groups.split())
     msg = None
@@ -36,6 +45,9 @@ def group_tag(chat_id, words):
 
 
 def group_create(chat_id, gr_name):
+    """
+    Creates group with specified name - {gr_name}.
+    """
     ret = db.group_create(chat_id, gr_name)
     msg = None
     if ret == 1:
@@ -46,6 +58,9 @@ def group_create(chat_id, gr_name):
 
 
 def group_del(chat_id, gr_name):
+    """
+    Deletes group with specified name - {gr_name}
+    """
     ret = db.group_delete(chat_id, gr_name)
     msg = None
     if ret == 1:
@@ -58,6 +73,9 @@ def group_del(chat_id, gr_name):
 
 
 def group_members(chat_id, gr_name):
+    """
+    Returns string containing all the names of users of {gr_name} group.
+    """
     ret_code, members = db.group_get_members(chat_id, gr_name)
     msg = None
     if ret_code == 1:
@@ -71,6 +89,9 @@ def group_members(chat_id, gr_name):
 
 
 def group_add_member(chat_id, gr_name, username, chat_member_id):
+    """
+    Adds {username} user to {gr_name} group.
+    """
     ret = db.group_add_member(chat_id, gr_name, username, chat_member_id, True)
     msg = None
     if ret == 1:
@@ -87,6 +108,9 @@ def group_add_member(chat_id, gr_name, username, chat_member_id):
 
 
 def group_del_member(chat_id, gr_name, username):
+    """
+    Deletes {username} user from {gr_name} group.
+    """
     ret = db.group_del_member(chat_id, gr_name, username)
     msg = None
     if ret == 1:
