@@ -218,7 +218,7 @@ def group_get_id_by_name(chat_id, gr_name):
 
 def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
     if not check_if_group_exists(chat_id, gr_name):
-        return False
+        return 1
     
     # creating user if adding to group 'all'
     if (gr_name == "all"):
@@ -232,19 +232,13 @@ def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
         cur.close()
         
     if check_if_user_is_new(chat_id, username):
-        return False
+        return 2
     
-        
     if group_contains_member(chat_id, gr_name, username):
-        return False
+        return 3
     
     id_group = group_get_id_by_name(chat_id, gr_name)
-    #debug print
-    print(f"id user: {id_group}")
-    
     id_user = user_get_id_by_username(chat_id, username)
-    #debug print
-    print(f"id user: {id_user}")
     
     cur = conn.cursor()
     add_to_group_user_table_query = f"""
@@ -254,7 +248,7 @@ def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
     cur.execute(add_to_group_user_table_query)
     cur.connection.commit()
     cur.close()
-    return True
+    return 0
 
 
 def group_contains_member(chat_id, gr_name, username):
@@ -284,10 +278,10 @@ def group_contains_member(chat_id, gr_name, username):
 
 def group_del_member(chat_id, gr_name, username) -> bool:
     if gr_name == 'all':
-        return False
+        return 1
     
     if not group_contains_member(chat_id, gr_name, username):
-        return False
+        return 2
     
     id_group = group_get_id_by_name(chat_id, gr_name)
     id_user = user_get_id_by_username(chat_id, username)
@@ -301,11 +295,13 @@ def group_del_member(chat_id, gr_name, username) -> bool:
     cur.execute(query)
     cur.connection.commit()
     cur.close()
-    return True
+    return 0
 
 
 #returns string such as "usrname1 usrname2 usrname3"
 def group_get_members(chat_id, gr_name):
+    if not check_if_group_exists(gr_name):
+        return (1, None)
     cur = conn.cursor()
     query = f"""
     SELECT tg_username FROM users, group_user, groups WHERE
@@ -320,7 +316,7 @@ def group_get_members(chat_id, gr_name):
     for tup in cur.fetchall():
         ret += tup[0] + " "
     cur.close()
-    return ret.rstrip()
+    return (0, ret.rstrip())
 
 
 
@@ -362,9 +358,9 @@ def main():
     
     debug_print_chats()
     debug_print_group_user()
-    
     pass
     
     
 if __name__ == "__main__":
     main()
+    
