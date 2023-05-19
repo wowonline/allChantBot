@@ -114,7 +114,7 @@ def bot_parse_queries(response):
                                         msg = "Username must not contain \"@\" symbol!"
                 
                                     elif not is_username_valid(username):
-                                        msg = "Username is not valid! (It may contain a-Z, 0-9 and underscore symbols only and have maximum length of 32)"
+                                        msg = "Username is not valid! It may contain a-Z, 0-9 and underscore symbols only and have maximum length of 32"
                 
                                     else:
                                         if command == "/group_add_member":
