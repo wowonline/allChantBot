@@ -97,6 +97,7 @@ def bot_parse_queries(response):
         # to remove chat_instance and make it BOT instance for
         # containing env variables
         
+        msg = None
         if (db.check_if_chat_is_new(chat_id)):
             db.add_chat_and_create_group_all(chat_id, chat_type, chat_title)
             db.group_add_member(chat_id, "all", chat_member_username, chat_member_id, False)
@@ -107,105 +108,99 @@ def bot_parse_queries(response):
         elif message == '/group_list':
             group_names = db.get_all_group_names(chat_id)
             msg = f"Groups:\n{group_names}"
-            bot_send_message(chat_id, msg)
-            return
 
         elif message == '/group_help' or message == '/gh':
             msg = get_group_help_string()
-            bot_send_message(chat_id, msg)
-            return
 
-        words = message.split()
-        
-        group_commands = set(["/group_create", "/group_add_member",
-                             "/group_del_member", "/group_del",
-                             "/group_members"])
-            
-        msg = None
-        try:
-            if words[0][0] == '@':
-                groups = db.get_all_group_names(chat_id)
-                groups_set = set(groups.split())
-                if (words[0][1:] in groups_set):
-                    gr_name = words[0][1:]
-                    ret, users = db.group_get_members(chat_id, gr_name)
-                    if ret == 2:
-                        msg = "You can't tag an empty group!"
-                    elif ret == 0:
-                        msg = f"@{' @'.join(users.split())}"
+        else:
+            words = message.split()
+            group_commands = set(["/group_create", "/group_add_member",
+                                "/group_del_member", "/group_del",
+                                "/group_members"])
+                
+            try:
+                if words[0][0] == '@':
+                    groups = db.get_all_group_names(chat_id)
+                    groups_set = set(groups.split())
+                    if (words[0][1:] in groups_set):
+                        gr_name = words[0][1:]
+                        ret, users = db.group_get_members(chat_id, gr_name)
+                        if ret == 2:
+                            msg = "You can't tag an empty group!"
+                        elif ret == 0:
+                            msg = f"@{' @'.join(users.split())}"
 
-            elif words[0] in group_commands:
-                command = words[0]
-                try:
-                    gr_name = words[1]
-                    if not contains_only_alpha_symbols(gr_name):
-                        msg = f"Group name can't contain non-alphabet symbols!"
-                    else:
-                        if command == "/group_create":
-                            ret = db.group_create(chat_id, gr_name)
-                            if ret == 1:
-                                msg = f"Group \"{gr_name}\" is already exists!"
-                            elif ret == 0:
-                                msg = f"Group \"{gr_name}\" was created!"
-
-                        elif command == "/group_del":
-                            ret = db.group_delete(chat_id, gr_name)
-                            if ret == 1:
-                                msg = "Group \"all\" can't be deleted!"
-                            elif ret == 2:
-                                msg = f"Group \"{gr_name}\" doesn't exists!"
-                            elif ret == 0:
-                                msg = f"Group \"{gr_name}\" was deleted!"
-                        
-                        elif command == "/group_members":
-                            ret_code, members = db.group_get_members(chat_id, gr_name)
-                            if ret_code == 1:
-                                msg = f"Group \"{gr_name}\" doesn't exists!"
-                            elif ret_code == 2:
-                                msg = f"Group \"{gr_name}\" doesn't have any member!"
-                            elif ret_code == 0:
-                                members = ", ".join(members.split()).rstrip()
-                                msg = f"Group \"{gr_name}\" contains of\n{members}"
-                        
+                elif words[0] in group_commands:
+                    command = words[0]
+                    try:
+                        gr_name = words[1]
+                        if not contains_only_alpha_symbols(gr_name):
+                            msg = f"Group name can't contain non-alphabet symbols!"
                         else:
-                            try:
-                                username = words[2]
-                                if "@" in username:
-                                    msg = "Username must not contain \"@\" symbol!"
-                                elif not is_username_valid(username):
-                                    msg = "Username is not valid! (It may contain a-z, 0-9 and underscore symbols only)"
-                                else:
-                                    if command == "/group_add_member":
-                                        ret = db.group_add_member(chat_id, gr_name, username, chat_member_id, True)
-                                        if ret == 1:
-                                            msg = f"Group {gr_name} doesn't exists!"
-                                        elif ret == 2:
-                                            msg = f"User can't be added to group \"all\" manually!"
-                                        elif ret == 3:
-                                            msg = f"User {username} wasn't recognized by bot before!\nFirstly, he has to write something in chat!"
-                                        elif ret == 4:
-                                            msg = f"User {username} is already in group \"{gr_name}\"!"
-                                        elif ret == 0:
-                                            msg = f"User {username} was added to group \"{gr_name}\"!"
-                                            
-                                    elif command == "/group_del_member":
-                                        ret = db.group_del_member(chat_id, gr_name, username)
-                                        if ret == 1:
-                                            msg = "You can't delete anybody from group \"all\""
-                                        elif ret == 2:
-                                            msg = f"User {username} doesn't belongs to group \"{gr_name}\"!"
-                                        elif ret == 0:
-                                            msg = f"User {username} was deleted from group \"{gr_name}\"!"
-                                
-                            except IndexError:
-                                msg = "You have to specify username!"
-                except IndexError:
-                    msg = "You have to specify name of the group!"
+                            if command == "/group_create":
+                                ret = db.group_create(chat_id, gr_name)
+                                if ret == 1:
+                                    msg = f"Group \"{gr_name}\" is already exists!"
+                                elif ret == 0:
+                                    msg = f"Group \"{gr_name}\" was created!"
+
+                            elif command == "/group_del":
+                                ret = db.group_delete(chat_id, gr_name)
+                                if ret == 1:
+                                    msg = "Group \"all\" can't be deleted!"
+                                elif ret == 2:
+                                    msg = f"Group \"{gr_name}\" doesn't exists!"
+                                elif ret == 0:
+                                    msg = f"Group \"{gr_name}\" was deleted!"
+                            
+                            elif command == "/group_members":
+                                ret_code, members = db.group_get_members(chat_id, gr_name)
+                                if ret_code == 1:
+                                    msg = f"Group \"{gr_name}\" doesn't exists!"
+                                elif ret_code == 2:
+                                    msg = f"Group \"{gr_name}\" doesn't have any member!"
+                                elif ret_code == 0:
+                                    members = ", ".join(members.split()).rstrip()
+                                    msg = f"Group \"{gr_name}\" contains of\n{members}"
+                            
+                            else:
+                                try:
+                                    username = words[2]
+                                    if "@" in username:
+                                        msg = "Username must not contain \"@\" symbol!"
+                                    elif not is_username_valid(username):
+                                        msg = "Username is not valid! (It may contain a-z, 0-9 and underscore symbols only)"
+                                    else:
+                                        if command == "/group_add_member":
+                                            ret = db.group_add_member(chat_id, gr_name, username, chat_member_id, True)
+                                            if ret == 1:
+                                                msg = f"Group {gr_name} doesn't exists!"
+                                            elif ret == 2:
+                                                msg = f"User can't be added to group \"all\" manually!"
+                                            elif ret == 3:
+                                                msg = f"User {username} wasn't recognized by bot before!\nFirstly, he has to write something in chat!"
+                                            elif ret == 4:
+                                                msg = f"User {username} is already in group \"{gr_name}\"!"
+                                            elif ret == 0:
+                                                msg = f"User {username} was added to group \"{gr_name}\"!"
+                                                
+                                        elif command == "/group_del_member":
+                                            ret = db.group_del_member(chat_id, gr_name, username)
+                                            if ret == 1:
+                                                msg = "You can't delete anybody from group \"all\""
+                                            elif ret == 2:
+                                                msg = f"User {username} doesn't belongs to group \"{gr_name}\"!"
+                                            elif ret == 0:
+                                                msg = f"User {username} was deleted from group \"{gr_name}\"!"
+                                    
+                                except IndexError:
+                                    msg = "You have to specify username!"
+                    except IndexError:
+                        msg = "You have to specify name of the group!"
+            except IndexError:
+                pass
             if msg != None:
                 bot_send_message(chat_id, msg)
-        except IndexError:
-            pass
-        
     except KeyError:
         pass
         
