@@ -65,7 +65,7 @@ def contains_only_alpha_symbols(string):
 
 
 def is_username_valid(username):
-    allowed_symbols = "abcdefghijklmnopqrstuvwxyz0123456789_"
+    allowed_symbols = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
     for c in username:
         if c not in allowed_symbols:
             return False
@@ -82,6 +82,12 @@ def bot_parse_queries(response):
         chat_type = response['message']['chat']['type']
         chat_username = None
         chat_title = None
+        
+        
+        forward_from_chat = response['message']['forward_from_chat']
+        forward_from = response['message']['forward_from']
+        if forward_from_chat != None or forward_from != None:
+            return
         
         if (chat_type == 'private'):
             chat_username = response['message']['chat']['username']
@@ -197,8 +203,6 @@ def bot_parse_queries(response):
                                             msg = f"User {username} doesn't belongs to group \"{gr_name}\"!"
                                         elif ret == 0:
                                             msg = f"User {username} was deleted from group \"{gr_name}\"!"
-                                
-                                
                                 
                             except IndexError:
                                 msg = "You have to specify username!"
