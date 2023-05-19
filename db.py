@@ -300,7 +300,7 @@ def group_del_member(chat_id, gr_name, username) -> bool:
 
 #returns string such as "usrname1 usrname2 usrname3"
 def group_get_members(chat_id, gr_name):
-    if not check_if_group_exists(gr_name):
+    if not check_if_group_exists(chat_id, gr_name):
         return (1, None)
     cur = conn.cursor()
     query = f"""
@@ -353,11 +353,11 @@ def user_get_id_by_username(chat_id, username):
 
 
 def main():
-    # drop_db()
-    # initialize_db()
+    drop_db()
+    initialize_db()
     
-    debug_print_chats()
-    debug_print_group_user()
+    # debug_print_chats()
+    # debug_print_group_user()
     pass
     
     
