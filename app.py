@@ -65,7 +65,7 @@ def bot_parse_queries(response):
         else:
             words = message.split()
             group_commands = set(["/group_create", "/group_add_member",
-                                "/group_del_member", "/group_del",
+                                "/group_del_member", "/group_delete",
                                 "/group_members"])
                 
             try:
@@ -83,7 +83,7 @@ def bot_parse_queries(response):
                             if command == "/group_create":
                                 msg = commands.group_create(chat_id, gr_name)
                 
-                            elif command == "/group_del":
+                            elif command == "/group_delete":
                                 msg = commands.group_delete(chat_id, gr_name)
                 
                             elif command == "/group_members":
