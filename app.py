@@ -100,10 +100,10 @@ def bot_parse_queries(response):
         
         if (db.check_if_chat_is_new(chat_id)):
             db.add_chat_and_create_group_all(chat_id, chat_type, chat_title)
-            db.group_add_member(chat_id, "all", chat_member_username, chat_member_id)
+            db.group_add_member(chat_id, "all", chat_member_username, chat_member_id, False)
             
         elif (db.check_if_user_is_new(chat_id, chat_member_username)):
-            db.group_add_member(chat_id, "all", chat_member_username, chat_member_id)
+            db.group_add_member(chat_id, "all", chat_member_username, chat_member_id, False)
         
         elif message == '/group_list':
             group_names = db.get_all_group_names(chat_id)
@@ -127,11 +127,13 @@ def bot_parse_queries(response):
             if words[0][0] == '@':
                 groups = db.get_all_group_names(chat_id)
                 groups_set = set(groups.split())
-                
                 if (words[0][1:] in groups_set):
                     gr_name = words[0][1:]
-                    users = db.group_get_members(chat_id, gr_name)
-                    msg = f"@{' @'.join(users.split())}"
+                    ret, users = db.group_get_members(chat_id, gr_name)
+                    if ret == 2:
+                        msg = "You can't tag an empty group!"
+                    elif ret == 0:
+                        msg = f"@{' @'.join(users.split())}"
 
             elif words[0] in group_commands:
                 command = words[0]
@@ -160,12 +162,11 @@ def bot_parse_queries(response):
                             ret_code, members = db.group_get_members(chat_id, gr_name)
                             if ret_code == 1:
                                 msg = f"Group \"{gr_name}\" doesn't exists!"
-                            if ret_code == 0:
+                            elif ret_code == 2:
+                                msg = f"Group \"{gr_name}\" doesn't have any member!"
+                            elif ret_code == 0:
                                 members = ", ".join(members.split()).rstrip()
-                                if len(members) == 0:
-                                    msg = f"Group \"{gr_name}\" doesn't have any member!"
-                                else:
-                                    msg = f"Group \"{gr_name}\" contains of\n{members}"
+                                msg = f"Group \"{gr_name}\" contains of\n{members}"
                         
                         else:
                             try:
@@ -176,12 +177,14 @@ def bot_parse_queries(response):
                                     msg = "Username is not valid! (It may contain a-z, 0-9 and underscore symbols only)"
                                 else:
                                     if command == "/group_add_member":
-                                        ret = db.group_add_member(chat_id, gr_name, username, chat_member_id)
+                                        ret = db.group_add_member(chat_id, gr_name, username, chat_member_id, True)
                                         if ret == 1:
                                             msg = f"Group {gr_name} doesn't exists!"
                                         elif ret == 2:
-                                            msg = f"User {username} wasn't recognized by bot before!\nFirstly, he has to write something in chat!"
+                                            msg = f"User can't be added to group \"all\" manually!"
                                         elif ret == 3:
+                                            msg = f"User {username} wasn't recognized by bot before!\nFirstly, he has to write something in chat!"
+                                        elif ret == 4:
                                             msg = f"User {username} is already in group \"{gr_name}\"!"
                                         elif ret == 0:
                                             msg = f"User {username} was added to group \"{gr_name}\"!"
