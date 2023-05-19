@@ -218,12 +218,14 @@ def group_get_id_by_name(chat_id, gr_name):
     return id_group
 
 
-def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
+def group_add_member(chat_id, gr_name, username, tg_user_id, is_called_by_user) -> bool:
     if not check_if_group_exists(chat_id, gr_name):
         return 1
     
     # creating user if adding to group 'all'
-    if (gr_name == "all"):
+    if gr_name == "all":
+        if is_called_by_user:
+            return 2
         cur = conn.cursor()
         user_add_query = f"""
         INSERT INTO users (tg_user_id, tg_username) VALUES
@@ -234,10 +236,10 @@ def group_add_member(chat_id, gr_name, username, tg_user_id) -> bool:
         cur.close()
         
     if check_if_user_is_new(chat_id, username):
-        return 2
+        return 3
     
     if group_contains_member(chat_id, gr_name, username):
-        return 3
+        return 4
     
     id_group = group_get_id_by_name(chat_id, gr_name)
     id_user = user_get_id_by_username(chat_id, username)
@@ -318,6 +320,9 @@ def group_get_members(chat_id, gr_name):
     for tup in cur.fetchall():
         ret += tup[0] + " "
     cur.close()
+    
+    if ret == "":
+        return (2, None)
     return (0, ret.rstrip())
 
 
