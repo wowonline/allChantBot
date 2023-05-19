@@ -118,9 +118,9 @@ def bot_parse_queries(response):
 
         words = message.split()
         
-        group_commands = set("/group_create", "/group_add_member",
+        group_commands = set(["/group_create", "/group_add_member",
                              "/group_del_member", "/group_del",
-                             "/group_members")
+                             "/group_members"])
             
         
         try:
