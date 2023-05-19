@@ -29,8 +29,8 @@ def contains_only_alpha_symbols(string):
 
 def is_username_valid(username):
     allowed_symbols = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
-    for c in username:
-        if c not in allowed_symbols:
+    for symbol in username:
+        if symbol not in allowed_symbols:
             return False
     return True
 
