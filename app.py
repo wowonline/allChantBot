@@ -1,10 +1,13 @@
 from flask import Flask, request
 import requests, os
-import db
 import commands
+import db
 
 
 def get_env_or_raise(env_name):
+    """
+    Reads environment variable or raise error if it is not set
+    """
     env_value = os.getenv(env_name)
     error_message = f'{env_name} environment variable must be set.'
     assert env_value, error_message
@@ -18,16 +21,31 @@ URL = get_env_or_raise('URL')
 
 
 def delete_paragraph(string):
+    """
+    Deletes ' symbols in string
+    """
     if string == None:
         return None
     return string.replace('\'', '')
 
 
-def contains_only_alpha_symbols(string):
-    return string.isalpha()
+def is_group_name_valid(gr_name):
+    """
+    Checks if name of group has length less or equal than 32 
+    and contains a-Z.
+    """
+    if len(gr_name > 32):
+        return False
+    return gr_name.isalpha()
 
 
 def is_username_valid(username):
+    """
+    Checks if username has length less or equal than 32 
+    and contains a-Z, 0-9 and underscore symbol.
+    """
+    if (len(username) > 32):
+        return False
     allowed_symbols = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
     for symbol in username:
         if symbol not in allowed_symbols:
@@ -65,8 +83,8 @@ def bot_parse_queries(response):
         else:
             words = message.split()
             group_commands = set(["/group_create", "/group_add_member",
-                                "/group_del_member", "/group_delete",
-                                "/group_members"])
+                                  "/group_del_member", "/group_delete",
+                                  "/group_members"])
                 
             try:
                 if words[0][0] == '@':
@@ -76,9 +94,9 @@ def bot_parse_queries(response):
                     command = words[0]
                     try:
                         gr_name = words[1]
-                        if not contains_only_alpha_symbols(gr_name):
-                            msg = f"Group name can't contain non-alphabet symbols!"
-                
+                        if not is_group_name_valid(gr_name):
+                            msg = f"Group name can't contain non-alphabet symbols and be longer than 32!"
+
                         else:
                             if command == "/group_create":
                                 msg = commands.group_create(chat_id, gr_name)
@@ -96,7 +114,7 @@ def bot_parse_queries(response):
                                         msg = "Username must not contain \"@\" symbol!"
                 
                                     elif not is_username_valid(username):
-                                        msg = "Username is not valid! (It may contain a-Z, 0-9 and underscore symbols only)"
+                                        msg = "Username is not valid! (It may contain a-Z, 0-9 and underscore symbols only and have maximum length of 32)"
                 
                                     else:
                                         if command == "/group_add_member":
