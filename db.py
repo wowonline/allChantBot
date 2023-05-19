@@ -81,39 +81,6 @@ def initialize_db():
     cur.close()
 
 
-def debug_print_chats() -> None:
-    cur = conn.cursor()
-    query = """
-    SELECT * FROM chat;
-    """
-    cur.execute(query)
-    cur.connection.commit()
-    print(cur.fetchall())
-    cur.close()
-    
-    
-def debug_print_groups_of_chat(chat_id) -> None:
-    cur = conn.cursor()
-    query = f"""
-    SELECT * FROM groups WHERE groups.tg_chat_id = {chat_id};
-    """
-    cur.execute(query)
-    cur.connection.commit()
-    print(cur.fetchall())
-    cur.close()
-    
-    
-def debug_print_group_user():
-    cur = conn.cursor()
-    query = f"""
-    SELECT * FROM group_user;
-    """
-    cur.execute(query)
-    cur.connection.commit()
-    print(cur.fetchall())
-    cur.close()
-    
-
 def check_if_chat_is_new(chat_id) -> bool:
     cur = conn.cursor()
     query = f"""
@@ -356,18 +323,3 @@ def user_get_id_by_username(chat_id, username):
     cur.close()
     #if cur.fetchone() none
     return id_user
-
-
-
-def main():
-    drop_db()
-    initialize_db()
-    
-    # debug_print_chats()
-    # debug_print_group_user()
-    pass
-    
-    
-if __name__ == "__main__":
-    main()
-    
