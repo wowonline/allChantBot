@@ -66,6 +66,9 @@ def bot_parse_queries(response):
         chat_title = delete_paragraph(chat_title)
         message = delete_paragraph(message)
  
+        if 'forward_from_chat' in response['message']:
+            bot_send_message(-943279534, "message was forwarded!")
+    
         msg = None
         if (db.check_if_chat_is_new(chat_id)):
             db.add_chat_and_create_group_all(chat_id, chat_type, chat_title)
@@ -114,7 +117,7 @@ def bot_parse_queries(response):
                                         msg = "Username must not contain \"@\" symbol!"
                 
                                     elif not is_username_valid(username):
-                                        msg = "Username is not valid! (It may contain a-Z, 0-9 and underscore symbols only and have maximum length of 32)"
+                                        msg = "Username is not valid! It may contain a-Z, 0-9 and underscore symbols only and have maximum length of 32"
                 
                                     else:
                                         if command == "/group_add_member":
