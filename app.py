@@ -122,7 +122,7 @@ def bot_parse_queries(response):
                              "/group_del_member", "/group_del",
                              "/group_members"])
             
-        
+        msg = None
         try:
             if words[0][0] == '@':
                 groups = db.get_all_group_names(chat_id)
@@ -202,8 +202,8 @@ def bot_parse_queries(response):
                                 msg = "You have to specify username!"
                 except IndexError:
                     msg = "You have to specify name of the group!"
-        
-            bot_send_message(chat_id, msg)
+            if msg != None:
+                bot_send_message(chat_id, msg)
         except IndexError:
             pass
         
