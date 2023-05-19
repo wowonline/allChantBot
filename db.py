@@ -172,7 +172,7 @@ def get_all_group_names(chat_id):
 
 def group_create(chat_id, gr_name) -> bool:
     if check_if_group_exists(chat_id, gr_name):
-        return False
+        return 1
     cur = conn.cursor()
     query = f"""
     INSERT INTO groups (group_name, tg_chat_id) VALUES
@@ -181,12 +181,14 @@ def group_create(chat_id, gr_name) -> bool:
     cur.execute(query)
     cur.connection.commit()
     cur.close()
-    return True
+    return 0
 
 
 def group_delete(chat_id, gr_name) -> bool:
-    if gr_name == "all" or not check_if_group_exists(chat_id, gr_name):
-        return False
+    if gr_name == "all":
+        return 1
+    if not check_if_group_exists(chat_id, gr_name):
+        return 2;
     cur = conn.cursor()
     query = f"""
     DELETE FROM groups
@@ -196,7 +198,7 @@ def group_delete(chat_id, gr_name) -> bool:
     cur.execute(query)
     cur.connection.commit()
     cur.close()
-    return True
+    return 0
 
 
 # need to check if group exists
