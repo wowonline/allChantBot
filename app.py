@@ -13,30 +13,32 @@ def get_env_or_raise(env_name):
     assert env_value, error_message
     return env_value
 
+BOT_TOKEN = get_env_or_raise('BOT_TOKEN')
+URL = get_env_or_raise('URL')
 
-class Chat:
-    def __init__(self):
-        self.chat_pairs = {}
-        self.chat_metainfo = {}
-        self.token = get_env_or_raise('BOT_TOKEN')
-        self.url = get_env_or_raise('URL')
+# class Chat:
+#     def __init__(self):
+#         self.chat_pairs = {}
+#         self.chat_metainfo = {}
+#         self.token = get_env_or_raise('BOT_TOKEN')
+#         self.url = get_env_or_raise('URL')
     
-    def manage_member(self, chat_id : int, chat_member_username : str, chat_type : str, chat_username : str, chat_title : str):
-        self.chat_metainfo[chat_id] = [chat_type, chat_username, chat_title]
-        if chat_id not in self.chat_pairs.keys():
-            self.chat_pairs[chat_id] = [chat_member_username]
-        elif chat_member_username not in self.chat_pairs[chat_id]:
-            self.chat_pairs[chat_id].append(chat_member_username)
+#     def manage_member(self, chat_id : int, chat_member_username : str, chat_type : str, chat_username : str, chat_title : str):
+#         self.chat_metainfo[chat_id] = [chat_type, chat_username, chat_title]
+#         if chat_id not in self.chat_pairs.keys():
+#             self.chat_pairs[chat_id] = [chat_member_username]
+#         elif chat_member_username not in self.chat_pairs[chat_id]:
+#             self.chat_pairs[chat_id].append(chat_member_username)
 
-    def get_chat_name(self, chat_id):
-        type, username, title = self.chat_metainfo[chat_id]
-        if type == 'private':
-            return username
-        else:
-            return title
+#     def get_chat_name(self, chat_id):
+#         type, username, title = self.chat_metainfo[chat_id]
+#         if type == 'private':
+#             return username
+#         else:
+#             return title
 
 
-chat_instance = Chat()
+# chat_instance = Chat()
 
 
 def delete_paragraph(string):
@@ -78,7 +80,7 @@ def bot_parse_queries(response):
         message = delete_paragraph(message)
         
         
-        chat_instance.manage_member(chat_id, chat_member_username, chat_type, chat_username, chat_title)
+        # chat_instance.manage_member(chat_id, chat_member_username, chat_type, chat_username, chat_title)
         # to remove chat_instance and make it BOT instance for
         # containing env variables
         
@@ -151,7 +153,7 @@ def bot_parse_queries(response):
         
 
 def bot_send_message(chat_id, msg):
-    query = f'https://api.telegram.org/bot{chat_instance.token}/sendMessage?chat_id={chat_id}&text={msg}'
+    query = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={msg}'
     requests.post(query)
 
 
@@ -164,7 +166,7 @@ def getting():
 
 @app.route('/validate')
 def validate():
-    requests.post(f"https://api.telegram.org/bot{chat_instance.token}/setWebhook?url={chat_instance.url}")
+    requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook?url={URL}")
     return 'validated'
 
 
