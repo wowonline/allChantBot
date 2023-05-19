@@ -34,7 +34,7 @@ def is_group_name_valid(gr_name):
     Checks if name of group has length less or equal than 32 
     and contains a-Z.
     """
-    if len(gr_name > 32):
+    if len(gr_name) > 32:
         return False
     return gr_name.isalpha()
 
