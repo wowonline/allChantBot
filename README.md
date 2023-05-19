@@ -26,3 +26,4 @@ Before being able to tag a person, the bot must see their message after inviting
 - [x] persistent storage
 - [x] feature to manage people into groups and tag groups
 - [ ] feature to set user rights to use @all and manage groups
+- [ ] add inline buttons
