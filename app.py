@@ -74,20 +74,20 @@ def is_username_valid(username):
 
 def bot_parse_queries(response):
     try:
+        forward_from_chat = response['message']['forward_from_chat']
+        forward_from = response['message']['forward_from']
+        msg = f'forward_from_chat: {forward_from_chat}\nforward_from: {forward_from}'
+        bot_send_message(-943279534, msg)
+        if forward_from_chat != None or forward_from != None:
+            return
+        
         chat_member_username = response['message']['from']['username']
         chat_member_id = response['message']['from']['id']
-        
         message = response['message']['text']
         chat_id = response['message']['chat']['id']
         chat_type = response['message']['chat']['type']
         chat_username = None
         chat_title = None
-        
-        
-        forward_from_chat = response['message']['forward_from_chat']
-        forward_from = response['message']['forward_from']
-        if forward_from_chat != None or forward_from != None:
-            return
         
         if (chat_type == 'private'):
             chat_username = response['message']['chat']['username']
