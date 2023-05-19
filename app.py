@@ -142,19 +142,18 @@ def bot_parse_queries(response):
                     else:
                         if command == "/group_create":
                             ret = db.group_create(chat_id, gr_name)
-                            if ret == False:
+                            if ret == 1:
                                 msg = f"Group \"{gr_name}\" is already exists!"
-                            else:
+                            elif ret == 0:
                                 msg = f"Group \"{gr_name}\" was created!"
 
                         elif command == "/group_del":
                             ret = db.group_delete(chat_id, gr_name)
-                            if ret == False:
-                                if gr_name == "all":
-                                    msg = "Group \"all\" can't be deleted!"
-                                else:
-                                    msg = f"Group \"{gr_name}\" doesn't exists!"
-                            else:
+                            if ret == 1:
+                                msg = "Group \"all\" can't be deleted!"
+                            elif ret == 2:
+                                msg = f"Group \"{gr_name}\" doesn't exists!"
+                            elif ret == 0:
                                 msg = f"Group \"{gr_name}\" was deleted!"
                         
                         elif command == "/group_members":
